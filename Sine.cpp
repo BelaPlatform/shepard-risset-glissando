@@ -58,7 +58,7 @@ float Sine::nextSample() {
 	// Increment and wrap the phase
 	float out = sinf(phase_);
 	phase_ += 2.f * (float)M_PI * frequency_ / sampleRate_;
-	while(phase_ >= 2.f * (float)M_PI)
+	while(phase_ >= (float)M_PI)
 		phase_ -= 2.f * (float)M_PI;
 	return out;
 }
