@@ -29,7 +29,7 @@ The Bela software is distributed under the GNU Lesser General Public License
 
 // *** Constants: change these to alter the sound of the Shepard-Risset effect
 // How many simultaneous oscillators? Max 10
-const int kNumOscillators = 24;
+const unsigned int kNumOscillators = 24;
 
 // Ratio between oscillators. 2.0 = octave. Try also powf(2.0, 1.0/3.0)
 const float kFrequencyRatio = powf(2.0, 1.0/3.0);
@@ -44,7 +44,7 @@ const float kLowestBaseFrequency = 30.0;
 float gCycleTime = 10.0;
 
 // Size of the window that provides spectral rolloff
-const int kSpectralWindowSize = 1024;
+const unsigned int kSpectralWindowSize = 1024;
 
 // Amplitude normalisation to avoid clipping. Adjust depending on kNumOscillators.
 const float kAmplitude = 0.1;
@@ -56,10 +56,12 @@ const float kMaxFrequencyRatio = log(powf(kFrequencyRatio, kNumOscillators)) / l
 // How often to update the oscillator frequencies
 // Don't do this every sample as it's inefficient and will run into
 // numerical precision issues
-const int kUpdateInterval = 64;
+const unsigned int kUpdateInterval = 64;
+unsigned int gUpdateCount = 0; // counting samples to update the oscillators
 
 //  Time period to send to the GUI in seconds
-float kGuiTimePeriod = 1.0 / 25.0;
+const float kGuiTimePeriod = 1.0 / 25.0;
+unsigned int gGuiCount = 0; // counting samples to update the GUI
 
 // *** Global variables: these keep track of the current state of the
 Sine *gOscillators; // Oscillator bank
@@ -101,7 +103,7 @@ bool setup(BelaContext *context, void *userData)
 	// Initialise a Hann window for spectral rolloff. This makes the lowest and highest
 	// frequencies fade out smoothly, improving the realism of the effect.
 	gSpectralWindow = new float[kSpectralWindowSize];
-	for(int n = 0; n < kSpectralWindowSize; n++)
+	for(unsigned int n = 0; n < kSpectralWindowSize; n++)
 	{
 		gSpectralWindow[n] = 0.5f * (1.0f - cosf(2.0 * M_PI * n / (float)(kSpectralWindowSize - 1)));
 	}
@@ -139,12 +141,11 @@ void render(BelaContext *context, void *userData)
 	// Iterate through all the samples in this block
 	for(unsigned int n = 0; n < context->audioFrames; n++)
 	{
-		static int oscillatorCount = 0;
 		float out = 0;
 
-		if(++oscillatorCount >= kUpdateInterval)
+		if(gUpdateCount >= kUpdateInterval)
 		{
-			oscillatorCount = 0;
+			gUpdateCount = 0;
 
 			// Update the oscillator frequencies and amplitudes
 			for(unsigned int i = 0; i < kNumOscillators; i++)
@@ -176,6 +177,7 @@ void render(BelaContext *context, void *userData)
 					gLogFrequencies[i] += 1.0;
 			}
 		}
+		++gUpdateCount;
 
 		// Compute the oscillator outputs every sample
 		for(unsigned int i = 0; i < kNumOscillators; i++)
@@ -194,16 +196,15 @@ void render(BelaContext *context, void *userData)
 		gScope.log(out);
 
 		// Send data to the GUI at regular intervals
-		static unsigned int guiCount = 0;
-		if (guiCount >= kGuiTimePeriod * context->audioSampleRate)
+		if (gGuiCount >= kGuiTimePeriod * context->audioSampleRate)
 		{
-			guiCount = 0;
+			gGuiCount = 0;
 
 			// Send data to GUI
-			gGui.sendBuffer(0, kNumOscillators);
+			gGui.sendBuffer(0, (int)kNumOscillators);
 			gGui.sendBuffer(1, gCycleTime);
 		}
-		guiCount++;
+		++gGuiCount;
 	}
 }
 
