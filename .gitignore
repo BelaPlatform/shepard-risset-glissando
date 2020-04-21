@@ -2,3 +2,4 @@
 settings.json
 build/*
 shepard-risset-glissando2
+.*.sw?
