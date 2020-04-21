@@ -1,14 +1,3 @@
-/***** sketch.js *****/
-/**
- * \example Gui/mouse-track
- *
- * GUI mouse tracker
- * =========
- *
- * p5js file that reads mouse (x,y) coordinates and send them to render.cpp through a buffer
- *
- **/
-
 let w;
 let phase = 0;
 let speed = 1;
