@@ -62,14 +62,14 @@ const int kUpdateInterval = 64;
 float kGuiTimePeriod = 1.0 / 25.0;
 
 // *** Global variables: these keep track of the current state of the
-Sine *gOscillators;								// Oscillator bank
-float *gLogFrequencies;							// Log-scale frequencies for each oscillator
-float *gAmplitudes;								// Amplitudes of each oscillator
-float *gSpectralWindow;							// Window defining spectral rolloff
-float gLogFrequencyIncrement;					// Amount to update the frequency by on a normalised 0-1 scale
+Sine *gOscillators; // Oscillator bank
+float *gLogFrequencies; // Log-scale frequencies for each oscillator
+float *gAmplitudes; // Amplitudes of each oscillator
+float *gSpectralWindow; // Window defining spectral rolloff
+float gLogFrequencyIncrement; // Amount to update the frequency by on a normalised 0-1 scale
 
-Scope gScope;									// The Bela oscilloscope
-Gui gGui;										// The custom browser-based GUI
+Scope gScope; // The Bela oscilloscope
+Gui gGui; // The custom browser-based GUI
 
 bool setup(BelaContext *context, void *userData)
 {
