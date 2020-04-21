@@ -54,7 +54,7 @@ function draw() {
 	}
 
 	pop();
-	
+
 	// Masking boxes
 	fill(0);
 	noStroke();
@@ -80,5 +80,5 @@ function windowResized() {
 function mouseMoved() {
 	//Sends to render.cpp a buffer. First argument is buffer index, second one is data type and third one is data sent.
 	//In this case we send an array with two elements.
-	Bela.data.sendBuffer(0, 'float', [mouseX/width, (mouseY/height-1)*-1]);
+	Bela.data.sendBuffer(0, 'float', [mouseX/width, 1 - mouseY/height]);
 }
