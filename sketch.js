@@ -10,6 +10,7 @@
  **/
 
 let w;
+let phase = 0;
 let speed = 1;
 
 function setup() {
@@ -36,10 +37,11 @@ function draw() {
 	translate(width / 2, height / 2);　 
 	rotate(60); 
 	translate(-w / 2, -w / 2);
+	phase += speed;
 	for (let i = 0; i < numOscillators; i++) 
 	{
 		
-		x = w - (i / numOscillators * w + frameCount*speed) % w;
+		x = w - ((i / numOscillators * w + phase) % w);
 		
 		if (i % 2 === 0) {
 			stroke(213, 213, 213);
