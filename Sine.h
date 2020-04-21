@@ -20,17 +20,17 @@ http://www.eecs.qmul.ac.uk/~andrewm
 The Bela software is distributed under the GNU Lesser General Public License
 (LGPL 3.0), available here: https://www.gnu.org/licenses/lgpl-3.0.txt
 */
-
-// sine.h: header file for sine oscillator class
+#pragma once
+// Sine.h: header file for sine oscillator class
 
 class Sine {
 public:
 	Sine(); // Default constructor
 	Sine(float sampleRate); // Constructor with argument
 
-	void setSampleRate(float rate); // Set the sample rate
+	void setup(float rate); // Set the sample rate
 	void setFrequency(float f); // Set the oscillator frequency
-	float frequency(); // Get the oscillator frequency
+	float getFrequency(); // Get the oscillator frequency
 
 	float nextSample(); // Get the next sample and update the phase
 

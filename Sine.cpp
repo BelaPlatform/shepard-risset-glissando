@@ -21,25 +21,25 @@ The Bela software is distributed under the GNU Lesser General Public License
 (LGPL 3.0), available here: https://www.gnu.org/licenses/lgpl-3.0.txt
 */
 
-// sine.cpp: file for implementing the sine oscillator class
+// Sine.cpp: file for implementing the sine oscillator class
 
 #include <cmath>
-#include "sine.h"
+#include "Sine.h"
 
 // Default constructor: call the specific constructor with a default value
-Sine::Sine() : Sine(44100.0) {}
+Sine::Sine() {}
 
 // Constructor taking a sample rate
 // Can also use initialisation lists instead of setting
 // variables inside the function
 Sine::Sine(float sampleRate) {
-	setSampleRate(sampleRate);
-	frequency_ = 440.0;
-	phase_ = 0;
+	setup(sampleRate);
 }
 
 // Set the sample rate
-void Sine::setSampleRate(float rate) {
+void Sine::setup(float rate) {
+	frequency_ = 440.0;
+	phase_ = 0;
 	sampleRate_ = rate;
 }
 
@@ -49,18 +49,18 @@ void Sine::setFrequency(float f) {
 }
 
 // Get the oscillator frequency
-float Sine::frequency() {
+float Sine::getFrequency() {
 	return frequency_;
 }
 
 // Get the next sample and update the phase
 float Sine::nextSample() {
 	// Increment and wrap the phase
-	phase_ += 2.0 * M_PI * frequency_ / sampleRate_;
-	while(phase_ >= 2.0 * M_PI)
-		phase_ -= 2.0 * M_PI;
-
-	return sinf(phase_);
+	float out = sinf(phase_);
+	phase_ += 2.f * (float)M_PI * frequency_ / sampleRate_;
+	while(phase_ >= 2.f * (float)M_PI)
+		phase_ -= 2.f * (float)M_PI;
+	return out;
 }
 
 // Destructor

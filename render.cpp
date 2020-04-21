@@ -25,7 +25,7 @@ The Bela software is distributed under the GNU Lesser General Public License
 #include <libraries/Scope/Scope.h>
 #include <libraries/Gui/Gui.h>
 #include <cmath>
-#include "sine.h"
+#include "Sine.h"
 
 // *** Constants: change these to alter the sound of the Shepard-Risset effect
 // How many simultaneous oscillators? Max 10
@@ -77,7 +77,7 @@ bool setup(BelaContext *context, void *userData)
 	gOscillators = new Sine[kNumOscillators];
 	for(unsigned int i = 0; i < kNumOscillators; i++)
 	{
-		gOscillators[i].setSampleRate(context->audioSampleRate);
+		gOscillators[i].setup(context->audioSampleRate);
 	}
 
 	// Initialise arrays of log-frequencies and set them to
