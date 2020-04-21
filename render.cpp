@@ -40,10 +40,6 @@ const float kFrequencyRatio = powf(2.0, 1.0/3.0);
 // Make sure the highest frequency is less than the Nyquist rate (22050Hz in this case)
 const float kLowestBaseFrequency = 30.0;
 
-// How long (in seconds) to complete one cycle, i.e. an increase by kFrequencyRatio
-// The effect is better when this is longer
-float gCycleTime = 10.0;
-
 // Size of the window that provides spectral rolloff
 const unsigned int kSpectralWindowSize = 1024;
 
@@ -60,7 +56,7 @@ const float kMaxFrequencyRatio = log(powf(kFrequencyRatio, kNumOscillators)) / l
 const unsigned int kUpdateInterval = 64;
 unsigned int gUpdateCount = 0; // counting samples to update the oscillators
 
-//  Time period to send to the GUI in seconds
+// Time period to send to the GUI in seconds
 const float kGuiTimePeriod = 1.0 / 25.0;
 unsigned int gGuiCount = 0; // counting samples to update the GUI
 
@@ -69,7 +65,6 @@ std::vector<Sine> gOscillators; // Oscillator bank
 std::vector<float> gLogFrequencies; // Log-scale frequencies for each oscillator
 std::vector<float> gAmplitudes; // Amplitudes of each oscillator
 std::vector<float> gSpectralWindow; // Window defining spectral rolloff
-float gLogFrequencyIncrement; // Amount to update the frequency by on a normalised 0-1 scale
 
 Scope gScope; // The Bela oscilloscope
 Gui gGui; // The custom browser-based GUI
@@ -109,12 +104,8 @@ bool setup(BelaContext *context, void *userData)
 		gSpectralWindow[n] = 0.5f * (1.0f - cosf(2.0 * M_PI * n / (float)(kSpectralWindowSize - 1)));
 	}
 
-	// Initialise the log frequency increment, which controls how fast the glissando moves
-	// In the time span of gCycleTime, the frequency should go up to the spacing between oscillators
-	// (i.e. complete one cylce) -- so it traverses a span of (1.0 / kNumOscillators) over gCycleTime seconds
-	gLogFrequencyIncrement = (float)kUpdateInterval / (kNumOscillators * gCycleTime * context->audioSampleRate);
 
-	// Initiliase the Bela oscilloscope with 1 channel
+	// Initialise the Bela oscilloscope with 1 channel
 	gScope.setup(1, context->audioSampleRate);
 
 	// Initialise the p5.js GUI. By default, the Bela GUI runs on port 5555 and address 'gui'
@@ -134,10 +125,17 @@ void render(BelaContext *context, void *userData)
 	// Retrieve contents of the buffer as floats
 	float* data = buffer.getAsFloat();
 
+	// How long (in seconds) to complete one cycle, i.e. an increase by kFrequencyRatio
+	// The effect is better when this is longer
 	// Map Y-axis (2nd element in the buffer) to cycle time
 	// Logarithmic mapping between 0.1 and 20.0
-	gCycleTime = powf(10.0, map(data[1], 1.0, 0.0, log(2.0), -1.0));
-	gLogFrequencyIncrement = (float)kUpdateInterval / (kNumOscillators * gCycleTime * context->audioSampleRate);
+	float cycleTime = powf(10.0, map(data[1], 1.0, 0.0, log(2.0), -1.0));
+
+	// Amount to update the frequency by on a normalised 0-1 scale
+	// Controls how fast the glissando moves
+	// In the time span of cycleTime, the frequency should go up to the spacing between oscillators
+	// (i.e. complete one cycle) -- so it traverses a span of (1.0 / kNumOscillators) over cycleTime seconds
+	float logFrequencyIncrement = (float)kUpdateInterval / (kNumOscillators * cycleTime * context->audioSampleRate);
 
 	// Iterate through all the samples in this block
 	for(unsigned int n = 0; n < context->audioFrames; n++)
@@ -161,7 +159,7 @@ void render(BelaContext *context, void *userData)
 
 				// Update the frequency of this oscillator and wrap around if it falls
 				// off the end of the range
-				gLogFrequencies[i] += gLogFrequencyIncrement;
+				gLogFrequencies[i] += logFrequencyIncrement;
 				if(gLogFrequencies[i] >= 1.0) {
 					// Recalculate all the other oscillator frequencies as a function of this one
 					// to prevent numerical precision errors from accumulating
@@ -203,7 +201,7 @@ void render(BelaContext *context, void *userData)
 
 			// Send data to GUI
 			gGui.sendBuffer(0, (int)kNumOscillators);
-			gGui.sendBuffer(1, gCycleTime);
+			gGui.sendBuffer(1, cycleTime);
 		}
 		++gGuiCount;
 	}
