@@ -25,6 +25,7 @@ The Bela software is distributed under the GNU Lesser General Public License
 #include <libraries/Scope/Scope.h>
 #include <libraries/Gui/Gui.h>
 #include <cmath>
+#include <vector>
 #include "Sine.h"
 
 // *** Constants: change these to alter the sound of the Shepard-Risset effect
@@ -64,10 +65,10 @@ const float kGuiTimePeriod = 1.0 / 25.0;
 unsigned int gGuiCount = 0; // counting samples to update the GUI
 
 // *** Global variables: these keep track of the current state of the
-Sine *gOscillators; // Oscillator bank
-float *gLogFrequencies; // Log-scale frequencies for each oscillator
-float *gAmplitudes; // Amplitudes of each oscillator
-float *gSpectralWindow; // Window defining spectral rolloff
+std::vector<Sine> gOscillators; // Oscillator bank
+std::vector<float> gLogFrequencies; // Log-scale frequencies for each oscillator
+std::vector<float> gAmplitudes; // Amplitudes of each oscillator
+std::vector<float> gSpectralWindow; // Window defining spectral rolloff
 float gLogFrequencyIncrement; // Amount to update the frequency by on a normalised 0-1 scale
 
 Scope gScope; // The Bela oscilloscope
@@ -76,7 +77,7 @@ Gui gGui; // The custom browser-based GUI
 bool setup(BelaContext *context, void *userData)
 {
 	// Initialise the oscillator bank and set its sample rate
-	gOscillators = new Sine[kNumOscillators];
+	gOscillators.resize(kNumOscillators);
 	for(unsigned int i = 0; i < kNumOscillators; i++)
 	{
 		gOscillators[i].setup(context->audioSampleRate);
@@ -86,7 +87,7 @@ bool setup(BelaContext *context, void *userData)
 	// span a range from 0 to 1. This will be used to look up
 	// the amplitude from the spectral window and also to calculate
 	// the actual frequency of that oscillator
-	gLogFrequencies = new float[kNumOscillators];
+	gLogFrequencies.resize(kNumOscillators);
 	for(unsigned int i = 0; i < kNumOscillators; i++)
 	{
 		gLogFrequencies[i] = (float)i / (float)kNumOscillators;
@@ -94,7 +95,7 @@ bool setup(BelaContext *context, void *userData)
 
 	// Initialise array of amplitudes for each oscillator. These will be updated
 	// when the frequencies change.
-	gAmplitudes = new float[kNumOscillators];
+	gAmplitudes.resize(kNumOscillators);
 	for(unsigned int i = 0; i < kNumOscillators; i++)
 	{
 		gAmplitudes[i] = 0;
@@ -102,7 +103,7 @@ bool setup(BelaContext *context, void *userData)
 
 	// Initialise a Hann window for spectral rolloff. This makes the lowest and highest
 	// frequencies fade out smoothly, improving the realism of the effect.
-	gSpectralWindow = new float[kSpectralWindowSize];
+	gSpectralWindow.resize(kSpectralWindowSize);
 	for(unsigned int n = 0; n < kSpectralWindowSize; n++)
 	{
 		gSpectralWindow[n] = 0.5f * (1.0f - cosf(2.0 * M_PI * n / (float)(kSpectralWindowSize - 1)));
@@ -210,9 +211,4 @@ void render(BelaContext *context, void *userData)
 
 void cleanup(BelaContext *context, void *userData)
 {
-	// Clean up any memory we allocated in setup()
-	delete[] gOscillators;
-	delete[] gSpectralWindow;
-	delete[] gLogFrequencies;
-	delete[] gAmplitudes;
 }
