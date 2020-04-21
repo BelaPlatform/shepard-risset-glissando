@@ -30,8 +30,9 @@ function draw() {
 	let numOscillators = Bela.data.buffers[0] * 2;
 	let cycleTime = Bela.data.buffers[1];
 
-	speed = map(cycleTime, 0.1, 5.0, 10, 0.5);
+	speed = map(cycleTime, 0.1, 5.0, 7, 0.5);
 
+	// Draw the lines, rotate and then animate position
 	push();
 
 	translate(width / 2, height / 2);　
@@ -44,29 +45,40 @@ function draw() {
 		x = w - ((i / numOscillators * w + phase) % w);
 
 		if (i % 2 === 0) {
-			stroke(213, 213, 213);
+			stroke(198,	28,	15);
 		} else {
-			stroke(28, 232, 181);
+			stroke(0, 33, 153);
 		}
 		strokeWeight(w / (numOscillators*2));
 		line(x, 0, x, w);
 	}
 
 	pop();
+	
+	// Masking boxes
+	fill(0);
+	noStroke();
+	rect(0, 0, width, height*0.2);
+	rect(0, height*0.8, width, height);
+	rect(0, 0, width*0.4, height);
+	rect(width*0.6, 0, width, height);
 
+	// Text
 	textAlign(CENTER);
-	textSize(40);
-	text("MOVE MOUSE TO\nCHANGE SPEED", width / 2, height - 100);
+	textSize(24);
+	stroke(255);
+	strokeWeight(1);
+	fill(255);
+	text("MOVE MOUSE VERTICALLY\nTO CHANGE SPEED", width / 2, height - (height*0.1));
 
 }
 
 function windowResized() {
 	resizeCanvas(windowWidth, windowHeight);
-	w = sqrt(width * width + height * height);
 }
 
 function mouseMoved() {
 	//Sends to render.cpp a buffer. First argument is buffer index, second one is data type and third one is data sent.
 	//In this case we send an array with two elements.
-	Bela.data.sendBuffer(0, 'float', [mouseX/width, mouseY/height]);
+	Bela.data.sendBuffer(0, 'float', [mouseX/width, (mouseY/height-1)*-1]);
 }

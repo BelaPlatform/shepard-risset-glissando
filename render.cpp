@@ -129,7 +129,7 @@ void render(BelaContext *context, void *userData)
 	// The effect is better when this is longer
 	// Map Y-axis (2nd element in the buffer) to cycle time
 	// Logarithmic mapping between 0.1 and 20.0
-	float cycleTime = powf(10.0, map(data[1], 1.0, 0.0, log(2.0), -1.0));
+	float cycleTime = powf(10.0, map(data[1], 0.0, 1.0, log(2.0), -1.0));
 
 	// Amount to update the frequency by on a normalised 0-1 scale
 	// Controls how fast the glissando moves
