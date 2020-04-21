@@ -1,8 +1,8 @@
 /*
- ____  _____ _        _    
-| __ )| ____| |      / \   
-|  _ \|  _| | |     / _ \  
-| |_) | |___| |___ / ___ \ 
+ ____  _____ _        _
+| __ )| ____| |      / \
+|  _ \|  _| | |     / _ \
+| |_) | |___| |___ / ___ \
 |____/|_____|_____/_/   \_\
 
 The platform for ultra-low latency audio and sensor processing
@@ -30,13 +30,13 @@ The Bela software is distributed under the GNU Lesser General Public License
 Sine::Sine() : Sine(44100.0) {}
 
 // Constructor taking a sample rate
-// Can also use initialisation lists instead of setting 
+// Can also use initialisation lists instead of setting
 // variables inside the function
 Sine::Sine(float sampleRate) {
 	setSampleRate(sampleRate);
 	frequency_ = 440.0;
 	phase_ = 0;
-} 
+}
 
 // Set the sample rate
 void Sine::setSampleRate(float rate) {
@@ -51,19 +51,19 @@ void Sine::setFrequency(float f) {
 // Get the oscillator frequency
 float Sine::frequency() {
 	return frequency_;
-}			
-	
+}
+
 // Get the next sample and update the phase
 float Sine::nextSample() {
 	// Increment and wrap the phase
 	phase_ += 2.0 * M_PI * frequency_ / sampleRate_;
 	while(phase_ >= 2.0 * M_PI)
 		phase_ -= 2.0 * M_PI;
-	
+
 	return sinf(phase_);
-}	
-	
+}
+
 // Destructor
 Sine::~Sine() {
 	// Nothing to do here
-}			
+}

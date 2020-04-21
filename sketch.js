@@ -13,7 +13,7 @@ let w;
 let speed = 2;
 
 function setup() {
-    //Create a canvas of dimensions given by current browser window
+	//Create a canvas of dimensions given by current browser window
 	createCanvas(windowWidth, windowHeight);
 	angleMode(DEGREES);
 	// w is used for drawing bars off screen
@@ -24,8 +24,8 @@ function draw() {
 	
 	background(255);
 
-	// Retreive the data being sent from render.cpp
-    let numOscillators = Bela.data.buffers[0] * 3;
+	// Retrieve the data being sent from render.cpp
+	let numOscillators = Bela.data.buffers[0] * 3;
 	
 	push();
 	
@@ -55,15 +55,13 @@ function draw() {
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  w = sqrt(width * width + height * height);
+	resizeCanvas(windowWidth, windowHeight);
+	w = sqrt(width * width + height * height);
 }
 
 function mouseClicked() {
 	//Sends to render.cpp a buffer. First argument is buffer index, second one is data type and third one is data sent.
 	//In this case we send an array with two elements. 
-    Bela.data.sendBuffer(0, 'float', [mouseX/width, mouseY/height]);	
+	Bela.data.sendBuffer(0, 'float', [mouseX/width, mouseY/height]);	
 	speed = map(mouseY/height, 0.0, 1.0, 2, 10);
 }
-
-

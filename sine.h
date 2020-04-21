@@ -1,8 +1,8 @@
 /*
- ____  _____ _        _    
-| __ )| ____| |      / \   
-|  _ \|  _| | |     / _ \  
-| |_) | |___| |___ / ___ \ 
+ ____  _____ _        _
+| __ )| ____| |      / \
+|  _ \|  _| | |     / _ \
+| |_) | |___| |___ / ___ \
 |____/|_____|_____/_/   \_\
 
 The platform for ultra-low latency audio and sensor processing
@@ -25,19 +25,19 @@ The Bela software is distributed under the GNU Lesser General Public License
 
 class Sine {
 public:
-	Sine();					// Default constructor
+	Sine(); // Default constructor
 	Sine(float sampleRate); // Constructor with argument
-	
+
 	void setSampleRate(float rate); // Set the sample rate
-	void setFrequency(float f);	// Set the oscillator frequency
-	float frequency();			// Get the oscillator frequency
-	
-	float nextSample();			// Get the next sample and update the phase
-	
-	~Sine();				// Destructor
+	void setFrequency(float f); // Set the oscillator frequency
+	float frequency(); // Get the oscillator frequency
+
+	float nextSample(); // Get the next sample and update the phase
+
+	~Sine(); // Destructor
 
 private:
-	float sampleRate_;			// Sample rate of the audio
-	float frequency_;			// Frequency of the oscillator
-	float phase_;				// Phase of the oscillator
+	float sampleRate_; // Sample rate of the audio
+	float frequency_; // Frequency of the oscillator
+	float phase_; // Phase of the oscillator
 };
