@@ -161,8 +161,6 @@ void render(BelaContext *context, void *userData)
 				// off the end of the range
 				gLogFrequencies[i] += gLogFrequencyIncrement;
 				if(gLogFrequencies[i] >= 1.0) {
-					// gLogFrequencies[i] = 0.0;
-
 					// Recalculate all the other oscillator frequencies as a function of this one
 					// to prevent numerical precision errors from accumulating
 					unsigned int osc = i;
@@ -173,12 +171,6 @@ void render(BelaContext *context, void *userData)
 						if(osc >= kNumOscillators)
 							osc = 0;
 					}
-
-					// rt_printf("Oscillator %d wrapped: ", i);
-					// for(int k = 0; k < kNumOscillators; k++) {
-					// 	rt_printf("%f (%f) ", gLogFrequencies[k], gLogFrequencies[k] - gLogFrequencies[i]);
-					// }
-					// rt_printf("\n");
 				}
 				if(gLogFrequencies[i] < 0.0)
 					gLogFrequencies[i] += 1.0;
