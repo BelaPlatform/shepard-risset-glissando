@@ -10,22 +10,26 @@
  **/
 
 let w;
-let speed = 2;
+let speed = 1;
 
 function setup() {
-	//Create a canvas of dimensions given by current browser window
+    //Create a canvas of dimensions given by current browser window
 	createCanvas(windowWidth, windowHeight);
 	angleMode(DEGREES);
 	// w is used for drawing bars off screen
 	w = sqrt(width * width + height * height)*1.5;
+
 }
 
 function draw() {
 	
 	background(255);
 
-	// Retrieve the data being sent from render.cpp
-	let numOscillators = Bela.data.buffers[0] * 3;
+	// Retreive the data being sent from render.cpp
+    let numOscillators = Bela.data.buffers[0] * 2;
+    let cycleTime = Bela.data.buffers[1];
+    
+    speed = map(cycleTime, 0.1, 5.0, 10, 0.5);
 	
 	push();
 	
@@ -50,18 +54,17 @@ function draw() {
 	
 	textAlign(CENTER);
 	textSize(40);
-	text("CLICK Y-AXIS TO CHANGE SPEED", width / 2, height - 50);
+	text("MOVE MOUSE TO\nCHANGE SPEED", width / 2, height - 100);
 
 }
 
 function windowResized() {
-	resizeCanvas(windowWidth, windowHeight);
-	w = sqrt(width * width + height * height);
+  resizeCanvas(windowWidth, windowHeight);
+  w = sqrt(width * width + height * height);
 }
 
-function mouseClicked() {
+function mouseMoved() {
 	//Sends to render.cpp a buffer. First argument is buffer index, second one is data type and third one is data sent.
 	//In this case we send an array with two elements. 
-	Bela.data.sendBuffer(0, 'float', [mouseX/width, mouseY/height]);	
-	speed = map(mouseY/height, 0.0, 1.0, 2, 10);
+    Bela.data.sendBuffer(0, 'float', [mouseX/width, mouseY/height]);	
 }

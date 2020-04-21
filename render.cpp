@@ -133,7 +133,7 @@ void render(BelaContext *context, void *userData)
 
 	// Map Y-axis (2nd element in the buffer) to cycle time
 	// Logarithmic mapping between 0.1 and 20.0
-	gCycleTime = powf(10.0, map(data[1], 0.0, 1.0, log(2.0), -1.0));
+	gCycleTime = powf(10.0, map(data[1], 1.0, 0.0, log(2.0), -1.0));
 	gLogFrequencyIncrement = (float)kUpdateInterval / (kNumOscillators * gCycleTime * context->audioSampleRate);
 
 	// Iterate through all the samples in this block
