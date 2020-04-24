@@ -30,10 +30,10 @@ The Bela software is distributed under the GNU Lesser General Public License
 
 // *** Constants: change these to alter the sound of the Shepard-Risset effect
 // How many simultaneous oscillators? Max 10
-const unsigned int kNumOscillators = 24;
+const unsigned int kNumOscillators = 8;
 
 // Ratio between oscillators. 2.0 = octave. Try also powf(2.0, 1.0/3.0)
-const float kFrequencyRatio = powf(2.0, 1.0/3.0);
+const float kFrequencyRatio = 2.0;
 
 // Starting frequency of the lowest oscillator
 // The highest frequency will be L*2^N where L is the lowest frequency and N is the number of oscillators
