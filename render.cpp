@@ -75,7 +75,7 @@ bool setup(BelaContext *context, void *userData)
 	gOscillators.resize(kNumOscillators);
 	for(unsigned int i = 0; i < kNumOscillators; i++)
 	{
-		gOscillators[i].setup(0, context->audioSampleRate);
+		gOscillators[i].setup(context->audioSampleRate);
 	}
 
 	// Initialise arrays of log-frequencies and set them to
