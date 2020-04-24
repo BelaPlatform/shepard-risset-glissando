@@ -24,9 +24,9 @@ The Bela software is distributed under the GNU Lesser General Public License
 #include <Bela.h>
 #include <libraries/Scope/Scope.h>
 #include <libraries/Gui/Gui.h>
-#include <libraries/Oscillator/Oscillator.h>
 #include <cmath>
 #include <vector>
+#include "Sine.h"
 
 // *** Constants: change these to alter the sound of the Shepard-Risset effect
 // How many simultaneous oscillators? Max 10
@@ -61,7 +61,7 @@ const float kGuiTimePeriod = 1.0 / 25.0;
 unsigned int gGuiCount = 0; // counting samples to update the GUI
 
 // *** Global variables: these keep track of the current state of the
-std::vector<Oscillator> gOscillators; // Oscillator bank
+std::vector<Sine> gOscillators; // Oscillator bank
 std::vector<float> gLogFrequencies; // Log-scale frequencies for each oscillator
 std::vector<float> gAmplitudes; // Amplitudes of each oscillator
 std::vector<float> gSpectralWindow; // Window defining spectral rolloff
@@ -182,7 +182,7 @@ void render(BelaContext *context, void *userData)
 		for(unsigned int i = 0; i < kNumOscillators; i++)
 		{
 			// Mix this oscillator into the audio output
-			out += gOscillators[i].process() * gAmplitudes[i] * kAmplitude;
+			out += gOscillators[i].nextSample() * gAmplitudes[i] * kAmplitude;
 		}
 
 		// Write the output to all the audio channels
